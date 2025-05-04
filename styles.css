@@ -2,51 +2,88 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f0f2f5;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 button {
-  background-color: #50a3f5;
-  padding: 10px;
+  background-color: #a2baff;
+  padding: 14px 30px;
   cursor: pointer;
-  border: #4b647e 2px solid;
   border-radius: 5px;
   transition-duration: 300ms;
+  border: 0;
+  font-weight: bold;
+  font-size: 16px;
+  display: inline-block;
 }
 
 button:hover {
-  background-color: #81baf3;
+  background-color: #cfdbfd;
 }
 
-.background-img1 {
-  height: 300px;
+.mg-top {
+  margin-top: 100px;
+}
+
+.background-img {
+  text-align: center;
   width: 100%;
-  background-image: url('https://instadelivery-public.nyc3.cdn.digitaloceanspaces.com/groups/17138137786626b9121fb50.jpeg');
-  background-position: 50% 20%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.background-img img {
+  max-width: 100%;
+  height: auto;
 }
 
 .big-button {
-  padding: 30px;
-  margin: 20px;
+  padding: 20px 30px;
+  margin: 15px 0;
+  width: 80%;
+  max-width: 300px;
 }
 
 .navbar {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
-  padding: 1rem 0;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   backdrop-filter: blur(10px);
-  background-color: rgba(22, 44, 104, 0.507);
+  background-color: #404870e3;
   color: white;
+  z-index: 1000;
+}
+
+.navbar div {
+  margin: 10px;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .navbar a {
   color: white;
-  margin: 0 10px;
   text-decoration: none;
   font-weight: bold;
+  font-size: 20px;
 }
 
 .navbar a:hover {
@@ -55,22 +92,62 @@ button:hover {
 
 .main-content {
   text-align: center;
-  margin-top: 100px;
+  padding: 0 15px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .main-content h1 {
-  font-size: 3em;
+  font-size: 2.5em;
   color: #2c3e50;
+  margin-bottom: 15px;
 }
 
 .main-content p {
   font-size: 1.2em;
   color: #555;
+  margin-bottom: 20px;
+}
+
+.main-content img {
+  max-width: 100%;
+  height: auto;
 }
 
 .cardapio {
-  width: 400px;
+  width: 100%;
+  max-width: 340px;
   padding: 5px;
-  background-color: #2c3e50;
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 15px 0;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px;
+  }
+  
+  .logo {
+    font-size: 18px;
+  }
+  
+  .navbar a {
+    margin: 0 5px;
+    font-size: 18px;
+  }
+  
+  .main-content h1 {
+    font-size: 2em;
+  }
+  
+  .main-content p {
+    font-size: 1em;
+  }
+  
+  .big-button {
+    padding: 15px 25px;
+    width: 90%;
+  }
 }
