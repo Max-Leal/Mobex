@@ -26,6 +26,81 @@ button:hover {
   background-color: #cfdbfd;
 }
 
+input {
+  text-align: center;
+  width: 50%;
+  padding: 15px;
+  border: 0;
+  border-radius: 5px;
+}
+
+.div-input, .div-button {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Mensagem de erro */
+.erro {
+  color: #c82333;
+  font-weight: bold;
+  margin: 10px 0;
+  text-align: center;
+}
+
+/* Container de resultado */
+.pedido {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 10px;
+
+  border-radius: 5px;
+}
+
+/* Detalhes gerais do pedido (código, mesa, pagamento, data) */
+.detalhes-pedido {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.detalhes-pedido p {
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+/* Lista de itens do pedido */
+.itens-pedido {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Cabeçalho da lista de itens */
+.itens-pedido .cabecalho {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Cada linha de item */
+.itens-pedido .linha-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.itens-pedido .linha-item:last-child {
+  margin-bottom: 0;
+}
+
 #pedido-confirmacao {
   margin-top: 25px;
   padding: 15px;

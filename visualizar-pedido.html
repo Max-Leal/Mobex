@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visualizar pedido - Mobex</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="logo">Mobex</div>
+    <div class="links">
+      <a href="index.html">Início</a>
+      <a href="menu.html">Pedidos</a>
+      <a href="#">Contato</a>
+    </div>
+  </div>
+
+  <div class="background-img">
+    <img src="img/bg_food_3.png" alt="">
+  </div>
+
+  <div class="desc">Visualizar pedido</div>
+
+  <div class="div-input">
+    <input id="pedido-codigo" type="text" placeholder="Insira o código do seu pedido">
+  </div>
+  <div class="div-button">
+    <button onclick="verificarPedido()">Verificar pedido</button>
+  </div>
+
+  <div id="resultado-pedido" class="pedido"></div>
+
+  <script>
+    let pedidoAtual = null;
+
+    function verificarPedido() {
+      const codigo = document.getElementById('pedido-codigo').value.trim();
+      const resultadoEl = document.getElementById('resultado-pedido');
+      resultadoEl.innerHTML = '';
+      pedidoAtual = null;
+
+      if (!codigo) {
+        resultadoEl.innerHTML = '<p class="erro">Por favor, insira um código de pedido.</p>';
+        return;
+      }
+
+      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      const pedido = pedidos.find(p => p.codigo === codigo);
+
+      if (!pedido) {
+        resultadoEl.innerHTML = `<p class="erro">Pedido <strong>${codigo}</strong> não encontrado.</p>`;
+        return;
+      }
+
+      pedidoAtual = pedido; // guardamos para atualizações
+
+      // Monta exibição
+      let html = `
+        <div class="detalhes-pedido">
+          <p><strong>Código:</strong> ${pedido.codigo}</p>
+          <p><strong>Pagamento:</strong> ${pedido.tipoPagamento}</p>
+          <p><strong>Data:</strong> ${new Date(pedido.data).toLocaleString('pt-BR')}</p>
+          <p><strong>Mesa atual:</strong> ${pedido.mesa || '—'}</p>
+          <div class="div-input desc">
+            Mesa:
+            <input id="nova-mesa" type="text" placeholder="Digite nova mesa" value="${pedido.mesa || ''}">
+            <button onclick="alterarMesa()">Salvar</button>
+          </div>
+        </div>
+        <div class="itens-pedido">
+          <div class="cabecalho">
+            <div>Nome</div><div>Qtd</div><div>Unit.</div><div>Total</div>
+          </div>
+      `;
+
+      pedido.itens.forEach(item => {
+        const subtotal = (item.preco * item.quantidade).toFixed(2);
+        html += `
+          <div class="linha-item">
+            <div>${item.nome}${item.tamanho ? ' (' + item.tamanho + ')' : ''}</div>
+            <div>${item.quantidade}</div>
+            <div>${item.preco.toFixed(2)}</div>
+            <div>${subtotal}</div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      resultadoEl.innerHTML = html;
+    }
+
+    function alterarMesa() {
+      if (!pedidoAtual) return;
+
+      const novaMesa = document.getElementById('nova-mesa').value.trim();
+      if (!novaMesa) {
+        alert('Insira um número de mesa válido.');
+        return;
+      }
+
+      // Atualiza no array de pedidos
+      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      const idx = pedidos.findIndex(p => p.codigo === pedidoAtual.codigo);
+      if (idx === -1) return;
+
+      pedidos[idx].mesa = novaMesa;
+      localStorage.setItem('pedidos', JSON.stringify(pedidos));
+
+      // Atualiza exibição
+      verificarPedido(); 
+      alert(`Mesa atualizada para ${novaMesa}!`);
+    }
+  </script>
+</body>
+
+</html>
