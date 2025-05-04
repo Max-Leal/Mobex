@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pagar pedido - Mobex</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="getCart()">
+  <div class="navbar">
+    <div class="logo">Mobex</div>
+    <div class="links">
+      <a href="index.html">Início</a>
+      <a href="menu.html">Pedidos</a>
+      <a href="#">Contato</a>
+    </div>
+  </div>
+
+  <div class="desc mg-top">Carrinho:</div>
+
+  <div class="center">
+    <div class="cabecalho">
+      <div>Nome</div>
+      <div>Qtd</div>
+      <div>Unitário (R$)</div>
+      <div>Total (R$)</div>
+    </div>
+    <div id="carrinho"></div>
+  </div>
+
+  <div class="total-geral" id="total-geral"></div>
+
+  <div id="numero-mesa" class="desc"></div>
+
+  <div class="desc">Formas de pagamento:</div>
+  <div class="formas-pagamento">
+    <button onclick="confirmarPedido('Pix')">Pix</button>
+    <button onclick="confirmarPedido('Débito')">Débito</button>
+    <button onclick="confirmarPedido('Crédito')">Crédito</button>
+    <button onclick="confirmarPedido('Dinheiro')">Dinheiro</button>
+  </div>
+
+  <!-- area de confirmação; estilize via seu CSS -->
+  <div id="pedido-confirmacao" class="pedido-confirmacao"></div>
+
+  <script>
+    function getCart() {
+      const raw = localStorage.getItem('carrinho');
+      const carrinhoEl = document.getElementById('carrinho');
+      const totalEl = document.getElementById('total-geral');
+      const mesaEl = document.getElementById('numero-mesa');
+      carrinhoEl.innerHTML = '';
+      totalEl.textContent = '';
+      mesaEl.textContent = '';
+
+      if (!raw) {
+        carrinhoEl.innerHTML = '<p>O carrinho está vazio.</p>';
+        return;
+      }
+
+      try {
+        const carrinho = JSON.parse(raw);
+        const itens = Object.values(carrinho).filter(i => i && i.nome);
+        const numeroMesa = carrinho.__mesa__ || '';
+        let totalGeral = 0;
+        let html = '';
+
+        if (itens.length === 0) {
+          carrinhoEl.innerHTML = '<p>O carrinho está vazio.</p>';
+        } else {
+          itens.forEach(item => {
+            const subtotal = item.quantidade * item.preco;
+            totalGeral += subtotal;
+            html += `
+              <div class="item">
+                <div>${item.nome}${item.tamanho ? ' (' + item.tamanho + ')' : ''}</div>
+                <div>${item.quantidade}</div>
+                <div>${item.preco.toFixed(2)}</div>
+                <div>${subtotal.toFixed(2)}</div>
+              </div>
+            `;
+          });
+          carrinhoEl.innerHTML = html;
+          totalEl.textContent = `Valor total: R$ ${totalGeral.toFixed(2)}`;
+        }
+
+        mesaEl.textContent = numeroMesa
+          ? `Mesa nº ${numeroMesa}`
+          : 'Número da mesa não informado.';
+
+      } catch (err) {
+        console.error('Erro ao interpretar carrinho:', err);
+        carrinhoEl.innerHTML = '<p>Erro ao carregar o carrinho.</p>';
+      }
+    }
+
+    function confirmarPedido(tipo) {
+      const raw = localStorage.getItem('carrinho');
+      if (!raw) {
+        alert('Carrinho vazio!');
+        return;
+      }
+
+      // montar o novo pedido
+      const carrinho = JSON.parse(raw);
+      const itens = Object.values(carrinho).filter(i => i && i.nome);
+      const mesa = carrinho.__mesa__ || '';
+      // contador sequencial
+      let count = parseInt(localStorage.getItem('pedidoCount') || '0', 10) + 1;
+      localStorage.setItem('pedidoCount', count);
+      const codigo = String(count).padStart(3, '0');
+
+      const novoPedido = {
+        codigo,
+        tipoPagamento: tipo,
+        mesa,
+        itens,
+        data: new Date().toISOString()
+      };
+
+      // salva no array de pedidos
+      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      pedidos.push(novoPedido);
+      localStorage.setItem('pedidos', JSON.stringify(pedidos));
+
+      // exibe confirmação
+      const confEl = document.getElementById('pedido-confirmacao');
+      confEl.innerHTML = `Pedido <strong>${codigo}</strong> confirmado!`;
+      confEl.style.display = 'block';
+
+      // limpa carrinho e recarrega
+      localStorage.removeItem('carrinho');
+      getCart();
+    }
+  </script>
+</body>
+
+</html>

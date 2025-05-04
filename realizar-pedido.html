@@ -126,10 +126,14 @@
             </tr>
         </table>
 
+        <div class="desc">
+            <input class="esc-mesa" type="text" placeholder="Insira o número da mesa">
+        </div>
+
         <div class="carrinho">
             <button onclick="resetCart()" class="delete-box"><img class="icon" src="icons/trash.webp" alt=""></button>
             <button class="cart-button">Adicionar ao carrinho</button>
-            <button class="pagar"><a href="" class="pagar">Pagar</a></button>
+            <button class="pagar"><a href="pagamento.html" class="pagar">Pagar</a></button>
         </div>
 
     </div>
@@ -236,18 +240,21 @@
 
         // Função para adicionar itens ao carrinho
         function addCarrinho() {
-            // Obter itens selecionados
             const itensSelecionados = JSON.parse(localStorage.getItem('itensSelecionados'));
-
             if (Object.keys(itensSelecionados).length === 0) {
                 alert('Selecione pelo menos um item para adicionar ao carrinho!');
                 return;
             }
 
-            // Obter o carrinho atual
+            // Pega valor da mesa
+            const numeroMesa = document.querySelector('.esc-mesa').value.trim();
+            if (!numeroMesa) {
+                alert('Por favor, insira o número da mesa.');
+                return;
+            }
+
             let carrinho = JSON.parse(localStorage.getItem('carrinho')) || {};
 
-            // Adicionar os itens selecionados ao carrinho
             for (const key in itensSelecionados) {
                 if (carrinho[key]) {
                     carrinho[key].quantidade += itensSelecionados[key].quantidade;
@@ -256,18 +263,16 @@
                 }
             }
 
-            // Salvar o carrinho atualizado
-            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            // Salva também o número da mesa
+            carrinho["__mesa__"] = numeroMesa;
 
-            // Limpar itens selecionados
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
             localStorage.setItem('itensSelecionados', JSON.stringify({}));
 
-            // Atualizar a interface
             atualizarContadores();
-
-            // Feedback para o usuário
             alert('Itens adicionados ao carrinho com sucesso!');
         }
+
 
         // Função auxiliar para atualizar contadores na interface
         function atualizarContadores() {

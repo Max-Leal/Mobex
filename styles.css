@@ -26,6 +26,81 @@ button:hover {
   background-color: #cfdbfd;
 }
 
+#pedido-confirmacao {
+  margin-top: 25px;
+  padding: 15px;
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  display: none;
+}
+
+.center {
+  text-align: center;
+}
+
+.esc-mesa {
+  width: 250px;
+  padding: 15px;
+  font-size: 16px;
+  border: 0px solid;
+  border-radius: 10px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.total-geral {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.total-geral p {
+  width: 75%;
+  padding: 20px;
+  background-color: #0180ff;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f4f4f4;
+  padding: 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 20px;
+}
+
+.item {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #cfdbfd;
+  display: flex;
+  gap: 50px;
+  margin: 20px;
+  justify-content: space-between;
+}
+
+.item p {
+  max-width: 80px;
+}
+
+.formas-pagamento {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.formas-pagamento button {
+  text-align: center;
+  padding: 15px;
+}
+
 .carrinho {
   display: flex;
   justify-content: center;
