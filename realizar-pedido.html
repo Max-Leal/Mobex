@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizar pedido - Mobex</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">Mobex</div>
+        <div class="links">
+            <a href="index.html">Início</a>
+            <a href="menu.html">Pedidos</a>
+            <a href="#">Contato</a>
+        </div>
+    </div>
+    <div class="background-img">
+        <img src="img/bg_food_2.png" alt="">
+    </div>
+
+    <div class="main-content">
+
+
+        <div class="desc">Lanches</div>
+
+        <table class="tabela-pedidos">
+            <tr>
+                <td>
+                    <div class="item-info">
+                        <span class="item-name">Taco</span>
+                        <span class="item-price">R$18,99</span>
+                    </div>
+                </td>
+                <td class="botoes-quantidade">
+                    <button class="btn-add">+</button>
+                    <button class="btn-remove">−</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="item-info">
+                        <span class="item-name">Pizza</span>
+                        <span class="item-price">R$49,99</span>
+                    </div>
+                </td>
+                <td class="botoes-quantidade">
+                    <button class="btn-add">+</button>
+                    <button class="btn-remove">−</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="item-info">
+                        <span class="item-name">Hambúrguer</span>
+                        <span class="item-price">R$34,99</span>
+                    </div>
+                </td>
+                <td class="botoes-quantidade">
+                    <button class="btn-add">+</button>
+                    <button class="btn-remove">−</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="item-info">
+                        <span class="item-name">Batata frita</span>
+                        <span class="item-price">R$14,99</span>
+                    </div>
+                </td>
+                <td class="botoes-quantidade">
+                    <button class="btn-add">+</button>
+                    <button class="btn-remove">−</button>
+                </td>
+            </tr>
+        </table>
+
+        <div class="desc">Bebidas</div>
+
+        <table class="tabela-pedidos">
+            <tr>
+                <td>
+                    <div class="item-info">
+                        <span class="item-name">Água</span>
+                        <span class="item-quantity">1L</span>
+                        <span class="item-price">R$2,99</span>
+                    </div>
+                </td>
+                <td class="botoes-quantidade">
+                    <button class="btn-add">+</button>
+                    <button class="btn-remove">−</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="item-info">
+                        <span class="item-name">Refrigerante</span>
+                        <span class="item-quantity">2L</span>
+                        <span class="item-price">R$9,99</span>
+                    </div>
+                </td>
+                <td class="botoes-quantidade">
+                    <button class="btn-add">+</button>
+                    <button class="btn-remove">−</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="item-info">
+                        <span class="item-name">Cerveja</span>
+                        <span class="item-quantity">473ml</span>
+                        <span class="item-price">R$4,99</span>
+                    </div>
+                </td>
+                <td class="botoes-quantidade">
+                    <button class="btn-add">+</button>
+                    <button class="btn-remove">−</button>
+                </td>
+            </tr>
+        </table>
+
+        <div class="carrinho">
+            <button onclick="resetCart()" class="delete-box"><img class="icon" src="icons/trash.webp" alt=""></button>
+            <button class="cart-button">Adicionar ao carrinho</button>
+            <button class="pagar"><a href="" class="pagar">Pagar</a></button>
+        </div>
+
+    </div>
+
+    <script>
+        // Inicialização dos dados quando a página carrega
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inicializa o localStorage se não existir
+            if (!localStorage.getItem('itensSelecionados')) {
+                localStorage.setItem('itensSelecionados', JSON.stringify({}));
+            }
+
+            if (!localStorage.getItem('carrinho')) {
+                localStorage.setItem('carrinho', JSON.stringify({}));
+            }
+
+            // Adiciona eventos aos botões
+            const botoesAdd = document.querySelectorAll('.btn-add');
+            const botoesRemove = document.querySelectorAll('.btn-remove');
+            const botaoCarrinho = document.querySelector('.cart-button');
+
+            botoesAdd.forEach(botao => {
+                botao.addEventListener('click', function () {
+                    const linha = this.closest('tr');
+                    const nomeItem = linha.querySelector('.item-name').textContent;
+                    add(nomeItem, linha);
+                });
+            });
+
+            botoesRemove.forEach(botao => {
+                botao.addEventListener('click', function () {
+                    const linha = this.closest('tr');
+                    const nomeItem = linha.querySelector('.item-name').textContent;
+                    remove(nomeItem, linha);
+                });
+            });
+
+            botaoCarrinho.addEventListener('click', addCarrinho);
+
+            // Atualiza a interface inicial
+            atualizarContadores();
+        });
+
+        // Função para adicionar um item
+        function add(nomeItem, linha) {
+            // Obter informações do item
+            const precoTexto = linha.querySelector('.item-price').textContent;
+            const preco = parseFloat(precoTexto.replace('R$', '').replace(',', '.'));
+            const quantidadeEl = linha.querySelector('.item-quantity');
+            const tamanho = quantidadeEl ? quantidadeEl.textContent : '';
+
+            // Cria uma chave única que inclui o tamanho (se existir)
+            const itemKey = tamanho ? `${nomeItem} (${tamanho})` : nomeItem;
+
+            // Obter itens selecionados do localStorage
+            let itensSelecionados = JSON.parse(localStorage.getItem('itensSelecionados'));
+
+            // Adicionar ou incrementar o item
+            if (itensSelecionados[itemKey]) {
+                itensSelecionados[itemKey].quantidade += 1;
+            } else {
+                itensSelecionados[itemKey] = {
+                    nome: nomeItem,
+                    tamanho: tamanho,
+                    preco: preco,
+                    quantidade: 1
+                };
+            }
+
+            // Salvar no localStorage
+            localStorage.setItem('itensSelecionados', JSON.stringify(itensSelecionados));
+
+            // Atualizar o contador visual
+            atualizarContadores();
+        }
+
+        // Função para remover um item
+        function remove(nomeItem, linha) {
+            // Obter informações do item
+            const quantidadeEl = linha.querySelector('.item-quantity');
+            const tamanho = quantidadeEl ? quantidadeEl.textContent : '';
+
+            // Cria uma chave única que inclui o tamanho (se existir)
+            const itemKey = tamanho ? `${nomeItem} (${tamanho})` : nomeItem;
+
+            // Obter itens selecionados do localStorage
+            let itensSelecionados = JSON.parse(localStorage.getItem('itensSelecionados'));
+
+            // Remover ou decrementar o item
+            if (itensSelecionados[itemKey]) {
+                if (itensSelecionados[itemKey].quantidade > 1) {
+                    itensSelecionados[itemKey].quantidade -= 1;
+                } else {
+                    delete itensSelecionados[itemKey];
+                }
+
+                // Salvar no localStorage
+                localStorage.setItem('itensSelecionados', JSON.stringify(itensSelecionados));
+
+                // Atualizar o contador visual
+                atualizarContadores();
+            }
+        }
+
+        // Função para adicionar itens ao carrinho
+        function addCarrinho() {
+            // Obter itens selecionados
+            const itensSelecionados = JSON.parse(localStorage.getItem('itensSelecionados'));
+
+            if (Object.keys(itensSelecionados).length === 0) {
+                alert('Selecione pelo menos um item para adicionar ao carrinho!');
+                return;
+            }
+
+            // Obter o carrinho atual
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || {};
+
+            // Adicionar os itens selecionados ao carrinho
+            for (const key in itensSelecionados) {
+                if (carrinho[key]) {
+                    carrinho[key].quantidade += itensSelecionados[key].quantidade;
+                } else {
+                    carrinho[key] = { ...itensSelecionados[key] };
+                }
+            }
+
+            // Salvar o carrinho atualizado
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+
+            // Limpar itens selecionados
+            localStorage.setItem('itensSelecionados', JSON.stringify({}));
+
+            // Atualizar a interface
+            atualizarContadores();
+
+            // Feedback para o usuário
+            alert('Itens adicionados ao carrinho com sucesso!');
+        }
+
+        // Função auxiliar para atualizar contadores na interface
+        function atualizarContadores() {
+            const itensSelecionados = JSON.parse(localStorage.getItem('itensSelecionados'));
+            const carrinho = JSON.parse(localStorage.getItem('carrinho')) || {};
+
+            // Atualizar contadores de itens individuais
+            document.querySelectorAll('.tabela-pedidos tr').forEach(linha => {
+                const nomeItem = linha.querySelector('.item-name').textContent;
+                const quantidadeEl = linha.querySelector('.item-quantity');
+                const tamanho = quantidadeEl ? quantidadeEl.textContent : '';
+
+                const itemKey = tamanho ? `${nomeItem} (${tamanho})` : nomeItem;
+
+                // Verificar se já existe um contador
+                let contador = linha.querySelector('.contador-item');
+                if (!contador) {
+                    contador = document.createElement('span');
+                    contador.className = 'contador-item';
+                    linha.querySelector('.item-info').appendChild(contador);
+                }
+
+                // Atualizar o contador
+                if (itensSelecionados[itemKey] && itensSelecionados[itemKey].quantidade > 0) {
+                    contador.textContent = ` (${itensSelecionados[itemKey].quantidade})`;
+                    contador.style.display = 'inline';
+                } else {
+                    contador.style.display = 'none';
+                }
+            });
+
+            // Atualizar texto do botão do carrinho
+            let totalItensCarrinho = 0;
+            for (const key in carrinho) {
+                totalItensCarrinho += carrinho[key].quantidade;
+            }
+
+            const botaoCarrinho = document.querySelector('.cart-button');
+            if (totalItensCarrinho > 0) {
+                botaoCarrinho.textContent = `Adicionar ao carrinho (${totalItensCarrinho})`;
+            } else {
+                botaoCarrinho.textContent = 'Adicionar ao carrinho';
+            }
+        }
+
+        function resetCart() {
+            localStorage.setItem('itensSelecionados', JSON.stringify({}))
+            localStorage.setItem('carrinho', JSON.stringify({}))
+            atualizarContadores()
+        }
+
+    </script>
+</body>
+
+</html>
