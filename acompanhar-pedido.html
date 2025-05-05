@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhar pedido - Mobex</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="getPedido()">
+    <div class="navbar">
+        <div class="logo">Mobex</div>
+        <div class="links">
+            <a href="index.html">Início</a>
+            <a href="menu.html">Pedidos</a>
+            <a href="#">Contato</a>
+        </div>
+    </div>
+    <div class="background-img">
+        <img src="img/bg_food_4.png" alt="">
+    </div>
+
+    <div class="desc">Acompanhe seu pedido:</div>
+
+    <div class="center">
+        <img src="img/chapeiro.png" alt="">
+    </div>
+
+    <div class="desc" id="fila"></div>
+
+    <script>
+        function getPedido() {
+          const fila = document.getElementById('fila');
+          const pedido = JSON.parse(localStorage.getItem('verificando') || 'null');
+      
+          if (!pedido) {
+            fila.textContent = 'Pedido não encontrado.';
+            return;
+          }
+      
+          const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+          const idx = pedidos.findIndex(p => p.codigo === pedido.codigo);
+      
+          if (idx === -1) {
+            fila.textContent = `Pedido ${pedido.codigo} não está mais na fila.`;
+          } else {
+            fila.textContent = `Seu lugar na fila: ${idx + 1}º`;
+          }
+        }
+      </script>      
+</body>
+
+</html>

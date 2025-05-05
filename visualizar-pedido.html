@@ -76,6 +76,9 @@
             <input id="nova-mesa" type="text" placeholder="Digite nova mesa" value="${pedido.mesa || ''}">
             <button onclick="alterarMesa()">Salvar</button>
           </div>
+          <div class="center">
+            <a href="acompanhar-pedido.html"><button>Acompanhar pedido</button></a>
+          </div>
         </div>
         <div class="itens-pedido">
           <div class="cabecalho">
@@ -97,6 +100,8 @@
 
       html += '</div>';
       resultadoEl.innerHTML = html;
+      localStorage.setItem('verificando', JSON.stringify(pedido));
+
     }
 
     function alterarMesa() {
