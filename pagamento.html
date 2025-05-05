@@ -14,7 +14,7 @@
     <div class="links">
       <a href="index.html">Início</a>
       <a href="menu.html">Pedidos</a>
-      <a href="#">Contato</a>
+      <a href="contato.html">Contato</a>
     </div>
   </div>
 
@@ -83,7 +83,7 @@
             `;
           });
           carrinhoEl.innerHTML = html;
-          totalEl.textContent = `Valor total: R$ ${totalGeral.toFixed(2)}`;
+          totalEl.innerHTML = `<div class="desc2">Valor total: R$ ${totalGeral.toFixed(2)}</div>`;
         }
 
         mesaEl.textContent = numeroMesa

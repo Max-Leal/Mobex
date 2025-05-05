@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contato - Mobex</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">Mobex</div>
+        <div class="links">
+            <a href="index.html">Início</a>
+            <a href="menu.html">Pedidos</a>
+            <a href="contato.html">Contato</a>
+        </div>
+    </div>
+
+    <div class="background-img">
+        <img src="img/bg_food_2.png" alt="" />
+    </div>
+
+    <div class="desc">Entre em contato conosco</div>
+
+    <div class="div-input">
+        <input type="text" id="nome" placeholder="Seu nome" />
+    </div>
+    <div class="div-input">
+        <input type="email" id="email" placeholder="Seu email" />
+    </div>
+    <div class="div-input">
+        <textarea id="mensagem" placeholder="Escreva sua mensagem" rows="5"></textarea>
+    </div>
+    <div class="div-button">
+        <button onclick="enviarMensagem()">Enviar</button>
+    </div>
+
+    <div class="desc" style="margin-top: 40px;">Ou fale conosco pelas redes sociais:</div>
+
+    <div class="links">
+        <div class="div-button">
+            <a href="" target="_blank">
+                <button style="background-color: #25D366;">(12)3 4567-8901 <img class="icon-contato" src="icons/whatsapp.png" alt=""></button>
+            </a>
+        </div>
+        <div class="div-button">
+            <a href="" target="_blank">
+                <button style="background-color: #e74d80;">Instagram <img class="icon-contato" src="icons/instagram.png" alt=""></button>
+            </a>
+        </div>
+        <div class="div-button">
+            <a href="" target="_blank">
+                <button style="background-color: #4267B2;">Facebook <img class="icon-contato" src="icons/facebook.png" alt=""></button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function enviarMensagem() {
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mensagem = document.getElementById('mensagem').value.trim();
+
+            if (!nome || !email || !mensagem) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            alert('Mensagem enviada com sucesso! Obrigado pelo contato.');
+
+            document.getElementById('nome').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('mensagem').value = '';
+        }
+    </script>
+</body>
+
+</html>
