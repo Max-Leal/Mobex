@@ -47,15 +47,21 @@
         return;
       }
 
+      // Recupera array de pedidos
       const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
-      const pedido = pedidos.find(p => p.codigo === codigo);
-
-      if (!pedido) {
+      // Encontra índice e objeto
+      const idx = pedidos.findIndex(p => p.codigo === codigo);
+      if (idx === -1) {
         resultadoEl.innerHTML = `<p class="erro">Pedido <strong>${codigo}</strong> não encontrado.</p>`;
         return;
       }
 
-      pedidoAtual = pedido; // guardamos para atualizações
+      const pedido = pedidos[idx];
+      pedidoAtual = pedido;
+
+      // Calcula posição na fila
+      const posicao = idx + 1;
+      const totalPedidos = pedidos.length;
 
       // Monta exibição
       let html = `
@@ -64,6 +70,7 @@
           <p><strong>Pagamento:</strong> ${pedido.tipoPagamento}</p>
           <p><strong>Data:</strong> ${new Date(pedido.data).toLocaleString('pt-BR')}</p>
           <p><strong>Mesa atual:</strong> ${pedido.mesa || '—'}</p>
+          <p><strong>Posição na fila:</strong> ${posicao} de ${totalPedidos}</p>
           <div class="div-input desc">
             Mesa:
             <input id="nova-mesa" type="text" placeholder="Digite nova mesa" value="${pedido.mesa || ''}">
@@ -109,8 +116,8 @@
       pedidos[idx].mesa = novaMesa;
       localStorage.setItem('pedidos', JSON.stringify(pedidos));
 
-      // Atualiza exibição
-      verificarPedido(); 
+      // Re-renderiza para refletir a mudança
+      verificarPedido();
       alert(`Mesa atualizada para ${novaMesa}!`);
     }
   </script>
