@@ -34,6 +34,10 @@ input, textarea {
   border-radius: 5px;
 }
 
+.big-area {
+  width: 80%;
+}
+
 .icon-contato {
   width: 20px;
 }
